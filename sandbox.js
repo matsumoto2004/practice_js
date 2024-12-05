@@ -1,23 +1,32 @@
-const getTodos = (callback) => {
-  const request = new XMLHttpRequest();
+const getTodos = (resource) => {
 
-  request.addEventListener('readystatechange',()=>{
-    if(request.readyState === 4 && request.status === 200){
-      const data=JSON.parse(request.responseText);
-      callback(undefined,data);
-    }
+  return new Promise((resolve,reject) => {
+    const request = new XMLHttpRequest();
+
+    request.addEventListener('readystatechange',()=>{
+      if(request.readyState === 4 && request.status === 200){
+        const data=JSON.parse(request.responseText);
+        resolve(data);
+      }
+      else if(request.readyState === 4 ){
+        reject("error getting resource");
+      }
+    });
+
+    request.open('GET',resource);
+    request.send();
   });
-
-  request.open('GET','https://jsonplaceholder.typicode.com/todos/');
-  request.send();
 };
 
-getTodos((err,data)=> {
-  console.log("callback fired");
-  if(err){
-    console.log(err);
-  }else{
-    console.log(data);
-  }
+getTodos("todos/luigi.json").then(data => {
+  console.log("promise resolved",data);
+  return getTodos("todos/mario.json");
+}).then(data =>{
+  console.log("promise resolved",data);
+  return getTodos("todos/shaun.json");
+}).then(data =>{
+  console.log("promise resolved",data);
+}).catch(err =>{
+  console.log("promise rejected",err);
 });
 
