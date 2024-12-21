@@ -33,7 +33,7 @@ app.get("/about",(req,res)=>{
   res.render("about",{title:"About"});
 });
 
-app.use("/blog",blogRoutes);
+app.use("/blogs",blogRoutes);
 
 //これは最後にすべき
 app.use((req,res)=>{
